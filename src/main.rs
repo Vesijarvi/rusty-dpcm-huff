@@ -1,3 +1,5 @@
+pub mod compress;
+use compress::huffman;
 extern crate clap;
 use clap::{App, Arg, ArgGroup};
 use std::fs;
