@@ -30,9 +30,9 @@ pub mod huffman {
             }
         }
     }
-    fn freq_count(stream_vec: Vec<u8>)->Vec<Node> {
+    fn freq_count(stream_vec: &Vec<u8>)->Vec<Node> {
         let mut freq_vec = Vec::new();
-        let mut color_cnt: Vec<u8> = stream_vec;
+        let mut color_cnt: Vec<u8> = stream_vec.to_vec();
         color_cnt.sort();
         let mut freq = 0;
         // println!("{:?}",color_cnt);
@@ -70,19 +70,19 @@ pub mod huffman {
     }
 
     // convert huffman tree to hashmap
-    fn to_hashmap(node: &Node)->HashMap<Option<u8>,String> {
+    fn to_hashmap(node: &Node)->HashMap<u8,String> {
         let mut hm = HashMap::new();
         // // Huffman tree is complete binary tree
         // // i.e. node will have 0 or 2 children, 0 is not possible
         if node.left.is_none(){
-            hm.insert(node.color,"0".to_string());
+            hm.insert(node.color.unwrap(),"0".to_string());
             return hm;
         }
 
-        fn encode(hm:&mut HashMap<Option<u8>,String>, 
+        fn encode(hm:&mut HashMap<u8,String>, 
                     node:&Node, encoding: String){
             if node.left.is_none(){
-                hm.insert(node.color, encoding);
+                hm.insert(node.color.unwrap(), encoding);
             } else {
                 let left_path = String::from(&encoding)+"0";
                 let right_path = String::from(&encoding)+"1";
@@ -97,13 +97,72 @@ pub mod huffman {
         encode(&mut hm, &node, "".to_string());
         return hm;
     }
-        
+    // convert huffman node to Vec of u8 using post-order traversal
+    fn to_vec(huffman_node: &Node)->Vec<u8> {
+        let mut output = Vec::new();
+         fn post_order(node:&Node, output_vec:&mut Vec<u8>){
+            if let Some(left) = &node.left {
+               post_order(left.as_ref(), output_vec);
+           }
+           if let Some(right) = &node.right {
+               post_order(right.as_ref(), output_vec);
+           }
+           output_vec.push(node.color.unwrap());
+       }
+        post_order(huffman_node, &mut output);
+        return output;
+    }
+    // convert huffman tree to vector of bytes
+    // the first element is length of tree
+    fn embed_tree(huffman_node:&Node)->Vec<u8>{
+        let mut compressed_data = to_vec(huffman_node);
+        compressed_data.insert(0, compressed_data.len() as u8);
+        println!("embed_tree: {:?}",compressed_data);
+        compressed_data
+    }
+    // map input color into corresponding codewords
+    // the first element is padding(the number of zeros appended at the last for u8)
+    fn compress_data(byte_stream: &Vec<u8>, huffman_node: &Node)->Vec<u8> {
+        let mut out_byte_stream: Vec<u8> = Vec::new();
+        let (mut byte, mut count) = (0,0);
 
-    pub fn compress(stream_vec: Vec<u8>)->Vec<u8>{
+        let huffman_map = to_hashmap(huffman_node);
+
+        // print
+        for (key, value) in &huffman_map {
+            println!("{}: {}", key, value);
+        }
+
+
+        // for c in byte_stream {
+        //     let encoding = huffman_map.get(&c).unwrap();
+        //     for e in encoding.bytes(){
+        //         let bit: bool = (e-'0' as u8) != 0;
+        //         byte = byte << 1 | (bit as u8);
+        //         count = (count+1) % 8;
+        //         if count == 0{
+        //             out_byte_stream.push(byte);
+        //             byte = 0;
+        //         } 
+        //     }
+        // }
+        // if count != 0 {
+        //     let padding:u8 = 8 - count;
+        //     byte <<= padding;
+        //     out_byte_stream.push(byte);
+        //     out_byte_stream.insert(0,padding);
+        // } else {
+        //     out_byte_stream.insert(0,0);
+        // }
+        out_byte_stream
+    }
+
+
+    pub fn compress(stream_vec: &Vec<u8>)->Vec<u8>{
         let frequency = freq_count(stream_vec);
-        let mut compressed_data = Vec::new();
         let huffman_tree = construct_huffman_tree(frequency);
-
+        let mut compressed_data = Vec::from(embed_tree(&huffman_tree));
+        compressed_data.extend(compress_data(stream_vec,&huffman_tree));
 
         compressed_data
     }

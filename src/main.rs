@@ -43,6 +43,6 @@ fn main(){
         if let Some(file) = matches.value_of("compress"){
             let byte_stream: Vec<u8> = get_file_as_byte_vec(&file.to_string());
             // println!("{:?}",byte_stream);
-            let compressed_data = huffman::compress(byte_stream);
+            let compressed_data = huffman::compress(&byte_stream);
         }
 }
