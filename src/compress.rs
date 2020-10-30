@@ -2,6 +2,7 @@ pub mod huffman {
     use std::boxed::Box;
     use std::cmp::Ordering;
     use std::collections::*;
+    use std::collections::HashMap;
 
     // Node is a binary tree data structure
     // It will be used by huffman compression algorithm
@@ -67,6 +68,36 @@ pub mod huffman {
         }
         pq.pop().unwrap()
     }
+
+    // convert huffman tree to hashmap
+    fn to_hashmap(node: &Node)->HashMap<Option<u8>,String> {
+        let mut hm = HashMap::new();
+        // // Huffman tree is complete binary tree
+        // // i.e. node will have 0 or 2 children, 0 is not possible
+        if node.left.is_none(){
+            hm.insert(node.color,"0".to_string());
+            return hm;
+        }
+
+        fn encode(hm:&mut HashMap<Option<u8>,String>, 
+                    node:&Node, encoding: String){
+            if node.left.is_none(){
+                hm.insert(node.color, encoding);
+            } else {
+                let left_path = String::from(&encoding)+"0";
+                let right_path = String::from(&encoding)+"1";
+                if let Some(left) = &node.right {
+                    encode(hm,&left,left_path);
+                }
+                if let Some(right) = &node.right {
+                    encode(hm,&right,right_path);
+                }
+            };
+        }
+        encode(&mut hm, &node, "".to_string());
+        return hm;
+    }
+        
 
     pub fn compress(stream_vec: Vec<u8>)->Vec<u8>{
         let frequency = freq_count(stream_vec);
