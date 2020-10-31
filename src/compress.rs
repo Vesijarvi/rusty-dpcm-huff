@@ -8,8 +8,9 @@ pub mod huffman {
     // It will be used by huffman compression algorithm
     #[derive(Clone, PartialEq, Eq, Ord, std::fmt::Debug)]
     struct Node {
-        color: Option<u8>,
+        color: u8,
         freq: i32,
+        is_leaf: bool,
         left: Option<Box<Node>>,
         right:Option<Box<Node>>,
     }
@@ -21,10 +22,11 @@ pub mod huffman {
     }
     impl Node {
         // create a leaf node
-        fn new (color:Option<u8>, freq:i32)->Node {
+        fn new (color:u8, freq:i32, is_leaf:bool)->Node {
             Node {
                 color,
                 freq, 
+                is_leaf,
                 left:None,
                 right:None,
             }
@@ -42,7 +44,7 @@ pub mod huffman {
             if c == prev {
                 freq += 1;
             } else {
-                freq_vec.push(Node::new(Option::Some(prev), freq));
+                freq_vec.push(Node::new(prev, freq, true));
                 freq = 1;
                 prev = c;
             }
@@ -59,8 +61,9 @@ pub mod huffman {
         while pq.len()>1{
             let (a,b)=(pq.pop().unwrap(), pq.pop().unwrap());
             let new_node = Node {
-                color: None,
+                color: 0,
                 freq: a.freq + b.freq,
+                is_leaf: false,
                 left: Option::from(Box::from(a)),
                 right: Option::from(Box::from(b)),
             };
@@ -75,22 +78,24 @@ pub mod huffman {
         // // Huffman tree is complete binary tree
         // // i.e. node will have 0 or 2 children, 0 is not possible
         if node.left.is_none(){
-            hm.insert(node.color.unwrap(),"0".to_string());
+            hm.insert(node.color,"0".to_string());
             return hm;
         }
 
-        fn encode(hm:&mut HashMap<u8,String>, 
-                    node:&Node, encoding: String){
-            if node.left.is_none(){
-                hm.insert(node.color.unwrap(), encoding);
+        fn encode(hm:&mut HashMap<u8,String>, node:&Node, encoding: String){
+            if node.left.is_none() & node.right.is_none(){
+                hm.insert(node.color, String::from(&encoding));
+                print!("(hm inserted {},{})",node.color,String::from(&encoding));
             } else {
                 let left_path = String::from(&encoding)+"0";
+                // println!("({},{})",node.color ,left_path);
                 let right_path = String::from(&encoding)+"1";
+                // println!("({},{})",node.color ,right_path);
                 if let Some(left) = &node.right {
-                    encode(hm,&left,left_path);
+                    encode(hm,left.as_ref(),left_path);
                 }
                 if let Some(right) = &node.right {
-                    encode(hm,&right,right_path);
+                    encode(hm,right.as_ref(),right_path);
                 }
             };
         }
@@ -100,14 +105,15 @@ pub mod huffman {
     // convert huffman node to Vec of u8 using post-order traversal
     fn to_vec(huffman_node: &Node)->Vec<u8> {
         let mut output = Vec::new();
-         fn post_order(node:&Node, output_vec:&mut Vec<u8>){
+        fn post_order(node:&Node, output_vec:&mut Vec<u8>){
             if let Some(left) = &node.left {
                post_order(left.as_ref(), output_vec);
-           }
-           if let Some(right) = &node.right {
+            }
+            if let Some(right) = &node.right {
                post_order(right.as_ref(), output_vec);
-           }
-           output_vec.push(node.color.unwrap());
+            }
+            // println!("to_vec color:{}, freq:{}, is_leaf:{}",node.color, node.freq, node.is_leaf);
+            output_vec.push(node.color);
        }
         post_order(huffman_node, &mut output);
         return output;
@@ -117,7 +123,7 @@ pub mod huffman {
     fn embed_tree(huffman_node:&Node)->Vec<u8>{
         let mut compressed_data = to_vec(huffman_node);
         compressed_data.insert(0, compressed_data.len() as u8);
-        println!("embed_tree: {:?}",compressed_data);
+        // println!("embed_tree: {:?}",compressed_data);
         compressed_data
     }
     // map input color into corresponding codewords
@@ -127,15 +133,12 @@ pub mod huffman {
         let (mut byte, mut count) = (0,0);
 
         let huffman_map = to_hashmap(huffman_node);
-
-        // print
-        for (key, value) in &huffman_map {
-            println!("{}: {}", key, value);
-        }
+        println!{"hashmap:"}
+        println!("{:?}", huffman_map);
 
 
         // for c in byte_stream {
-        //     let encoding = huffman_map.get(&c).unwrap();
+        //     let encoding = huffman_map.get(&c);
         //     for e in encoding.bytes(){
         //         let bit: bool = (e-'0' as u8) != 0;
         //         byte = byte << 1 | (bit as u8);
