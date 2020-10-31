@@ -83,19 +83,17 @@ pub mod huffman {
         }
 
         fn encode(hm:&mut HashMap<u8,String>, node:&Node, encoding: String){
-            if node.left.is_none() & node.right.is_none(){
+            if node.is_leaf == true {
                 hm.insert(node.color, String::from(&encoding));
-                print!("(hm inserted {},{})",node.color,String::from(&encoding));
+                // println!("(leaf_node inserted {},{})",node.color,String::from(&encoding));
             } else {
                 let left_path = String::from(&encoding)+"0";
-                // println!("({},{})",node.color ,left_path);
                 let right_path = String::from(&encoding)+"1";
-                // println!("({},{})",node.color ,right_path);
-                if let Some(left) = &node.right {
-                    encode(hm,left.as_ref(),left_path);
+                if let Some(left) = &node.left {
+                    encode(hm,&left,left_path);
                 }
                 if let Some(right) = &node.right {
-                    encode(hm,right.as_ref(),right_path);
+                    encode(hm,&right,right_path);
                 }
             };
         }
@@ -112,7 +110,7 @@ pub mod huffman {
             if let Some(right) = &node.right {
                post_order(right.as_ref(), output_vec);
             }
-            // println!("to_vec color:{}, freq:{}, is_leaf:{}",node.color, node.freq, node.is_leaf);
+            println!("to_vec color:{}, freq:{}, is_leaf:{}",node.color, node.freq, node.is_leaf);
             output_vec.push(node.color);
        }
         post_order(huffman_node, &mut output);
@@ -136,10 +134,9 @@ pub mod huffman {
         println!{"hashmap:"}
         println!("{:?}", huffman_map);
 
-
-        // for c in byte_stream {
-        //     let encoding = huffman_map.get(&c);
-        //     for e in encoding.bytes(){
+        for c in byte_stream {
+            let encoding = huffman_map.get(&c);
+            for e in encoding.bytes(){
         //         let bit: bool = (e-'0' as u8) != 0;
         //         byte = byte << 1 | (bit as u8);
         //         count = (count+1) % 8;
@@ -156,7 +153,7 @@ pub mod huffman {
         //     out_byte_stream.insert(0,padding);
         // } else {
         //     out_byte_stream.insert(0,0);
-        // }
+        }
         out_byte_stream
     }
 
@@ -165,6 +162,9 @@ pub mod huffman {
         let frequency = freq_count(stream_vec);
         let huffman_tree = construct_huffman_tree(frequency);
         let mut compressed_data = Vec::from(embed_tree(&huffman_tree));
+
+        println!("huff_tree{:?}",&huffman_tree);
+
         compressed_data.extend(compress_data(stream_vec,&huffman_tree));
 
         compressed_data
