@@ -52,12 +52,10 @@ pub mod huffman {
 
         freq_vec
     }
-    fn entropy_calc(freq_vec: &Vec<Node>)->f64 {
-        let num_color = freq_vec.len();
+    fn entropy_calc(freq_vec: &Vec<Node>, input_byte: &usize)->f64 {
         let mut entropy: f64 = 0.0;
-
         for node in freq_vec {
-            let p = node.freq as f64 / num_color as f64;
+            let p = node.freq as f64 / *input_byte as f64;
             entropy += (-1_f64)*p*p.log2();
         }
         entropy
@@ -165,11 +163,13 @@ pub mod huffman {
 
     pub fn compress(stream_vec: &Vec<u8>)->Vec<u8>{
         let frequency = freq_count(&stream_vec);
-        let entropy = entropy_calc(&frequency);
-        println!("-----------------------------");
-        println!("Entropy: {} bit", entropy);
-        println!("-----------------------------");
-        println!("Input byte: {}",&stream_vec.len());
+        let input_byte = &stream_vec.len();
+
+        let entropy = entropy_calc(&frequency, input_byte);
+        println!("---------------------------------");
+        println!("Entropy: {:.05} bit = {:.05} byte", entropy, entropy/8_f64);
+        println!("---------------------------------");
+        println!("Input byte: {}",input_byte);
         let huffman_tree = construct_huffman_tree(frequency);
         let mut compressed_data = Vec::from(embed_tree(&huffman_tree));
         compressed_data.extend(compress_data(stream_vec,&huffman_tree));
