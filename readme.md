@@ -36,7 +36,9 @@ concept is the same as my previous project:
 ## Experiment statistic
 
 Baboon
-  
+
+![Baboon](https://github.com/yppan/rusty-classic-huffman-for-img/blob/main/Data/PNG/baboon.png)
+
 | Image(256*256)  | Entropy(bit) | Before(byte) | After(byte) -without header | Header(byte) | Compression Rate |
 |-----------------|--------------|--------------|-----------------------------|--------------|------------------|
 | baboon_b        | 0.96909      | 65536        | 8197                        | 4            | 87.49%           |
