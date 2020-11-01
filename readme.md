@@ -2,8 +2,8 @@
   
 ## About 
 
-  The code is for experimenting classic huffman compression with some raw data images.  
-  (ie. Baboon and lena in raw,halftone and binary color)
+The code is for experimenting classic huffman compression with some raw data images.  
+(ie. Baboon and lena in raw,halftone and binary color)
 
 ## Usage
 - Clone directory to local   
@@ -24,8 +24,7 @@ $ cargo run -- -d <FILE>
 
 ## Future work 
 
-  Due to the lack of the time, now I only focus on the experiment of different ways of huffman coding. 
-Therefore **Decoder is yet not fully workable** 
+Due to the lack of the time, now I only focus on the experiment of different ways of huffman coding. Therefore **Decoder is yet not fully workable** 
 
 The basic decoder concept is the same as my previous project: [rusty-huffman-unicode](https://github.com/yppan/rusty-huffman-unicode/)" You can check detail implementation there if you want.  
 
