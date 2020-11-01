@@ -44,5 +44,8 @@ fn main(){
             let byte_stream: Vec<u8> = get_file_as_byte_vec(&file.to_string());
             // println!("{:?}",byte_stream);
             let compressed_data = huffman::compress(&byte_stream);
+            let output_file = file.to_string() + ".cmp";
+            let error_msg = "Error writing file: ".to_string() + &output_file;
+            fs::write(output_file, compressed_data).expect(&error_msg);
         }
 }

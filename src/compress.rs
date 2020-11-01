@@ -158,7 +158,6 @@ pub mod huffman {
         let frequency = freq_count(stream_vec);
         let huffman_tree = construct_huffman_tree(frequency);
         let mut compressed_data = Vec::from(embed_tree(&huffman_tree));
-
         compressed_data.extend(compress_data(stream_vec,&huffman_tree));
 
         compressed_data
