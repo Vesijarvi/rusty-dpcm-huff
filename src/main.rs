@@ -49,8 +49,9 @@ fn main(){
 		    fs::write(output_file, compressed_data).expect(&error_msg);
         }
         if let Some(file) = matches.value_of("decompress") {
-		    let error_msg = "Error reading file: ".to_string() + file;
-		    let data = fs::read(file).expect(&error_msg);
+            println!("Decoder will be implemented soon later");
+		    // let error_msg = "Error reading file: ".to_string() + file;
+		    // let data = fs::read(file).expect(&error_msg);
 		    // let compressed_data = huffman::decompress(&data);
 		    // let output_file = &file[0..file.len() - 4];
 		    // let error_msg = "Error writing file: ".to_string() + &output_file;

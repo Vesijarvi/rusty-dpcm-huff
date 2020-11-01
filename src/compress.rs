@@ -119,7 +119,6 @@ pub mod huffman {
             output_vec.push(node.color);
        }
         post_order(huffman_node, &mut output);
-        println!("Postorder: {:?}",output);
         return output;
     }
     // convert huffman tree to vector of bytes
@@ -178,7 +177,7 @@ pub mod huffman {
         println!("Total Output Byte: {}", compressed_data.len());
         compressed_data
     }
-    
+    /*
     fn construct_huffman_tree_from_postorder(post_order: &[u8])->Node {
         let mut stack = Vec::new();
         for c in post_order {
@@ -215,5 +214,5 @@ pub mod huffman {
 
         let ddd = Vec::new();
         ddd
-    }
+    }*/
 }
