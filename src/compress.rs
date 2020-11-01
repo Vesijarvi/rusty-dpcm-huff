@@ -119,6 +119,7 @@ pub mod huffman {
             output_vec.push(node.color);
        }
         post_order(huffman_node, &mut output);
+        println!("Postorder: {:?}",output);
         return output;
     }
     // convert huffman tree to vector of bytes
@@ -177,10 +178,42 @@ pub mod huffman {
         println!("Total Output Byte: {}", compressed_data.len());
         compressed_data
     }
+    
+    fn construct_huffman_tree_from_postorder(post_order: &[u8])->Node {
+        let mut stack = Vec::new();
+        for c in post_order {
+            if *c == 0 as u8 {
+                let (left, right) = (
+                    stack.pop().expect("Input contains Null byte"),
+                    stack.pop().expect("Input contains Null byte"),
+                );
+                stack.push(Node{
+                    color: 0,
+                    freq: 0,
+                    is_leaf: false,
+                    left: Option::from(Box::from(right)),
+                    right: Option::from(Box::from(left)),
+                });
+            } else {
+                stack.push(Node{
+                    color: *c as u8,
+                    freq: 0,
+                    is_leaf: true,
+                    left: None,
+                    right: None,
+                })
+            }
+        }
+        stack.pop().unwrap()
+    }
+
     pub fn decompress(stream_vec: &Vec<u8>)->Vec<u8>{
         let post_order_length = *stream_vec.first().expect("Data cannot be empty") as usize;
         let post_order = &stream_vec[1..post_order_length];
-        
+        let huffman_tree = construct_huffman_tree_from_postorder(post_order);
         // .....
+
+        let ddd = Vec::new();
+        ddd
     }
 }

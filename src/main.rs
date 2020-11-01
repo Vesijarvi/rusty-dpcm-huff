@@ -45,7 +45,7 @@ fn main(){
             // println!("{:?}",byte_stream);
             let compressed_data = huffman::compress(&byte_stream);
             let output_file = file.to_string() + ".cmp";
-            let error_msg = "Error writing file: ".to_string()
+            let error_msg = "Error writing file: ".to_string();
 		    fs::write(output_file, compressed_data).expect(&error_msg);
         }
         if let Some(file) = matches.value_of("decompress") {
