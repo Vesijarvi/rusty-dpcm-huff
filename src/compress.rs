@@ -177,4 +177,10 @@ pub mod huffman {
         println!("Total Output Byte: {}", compressed_data.len());
         compressed_data
     }
+    pub fn decompress(stream_vec: &Vec<u8>)->Vec<u8>{
+        let post_order_length = *stream_vec.first().expect("Data cannot be empty") as usize;
+        let post_order = &stream_vec[1..post_order_length];
+        
+        // .....
+    }
 }
