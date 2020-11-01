@@ -35,8 +35,8 @@ concept is the same as my previous project:
 
 ## Experiment statistic
 
-Baboon
-
+Baboon 
+  
 ![Baboon](https://github.com/yppan/rusty-classic-huffman-for-img/blob/main/Data/PNG/baboon.png)
 
 | Image(256*256)  | Entropy(bit) | Before(byte) | After(byte) -without header | Header(byte) | Compression Rate |
@@ -45,7 +45,8 @@ Baboon
 | baboon_halftone | 0.96909      | 65535        | 8197                        | 4            | 87.49%           |
 | baboon_raw      | 0.96909      | 65536        | 59939                       | 146          | 8.54%            |
 
-Lena
+Lena 
+  
 ![Lena](https://github.com/yppan/rusty-classic-huffman-for-img/blob/main/Data/PNG/lena.png)
 
 | Image(256*256)  | Entropy(bit) | Before(byte) | After(byte) -without header | Header(byte) | Compression Rate |
