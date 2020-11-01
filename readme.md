@@ -46,6 +46,7 @@ Baboon
 | baboon_raw      | 0.96909      | 65536        | 59939                       | 146          | 8.54%            |
 
 Lena
+![Lena](https://github.com/yppan/rusty-classic-huffman-for-img/blob/main/Data/PNG/lena.png)
 
 | Image(256*256)  | Entropy(bit) | Before(byte) | After(byte) -without header | Header(byte) | Compression Rate |
 |-----------------|--------------|--------------|-----------------------------|--------------|------------------|
