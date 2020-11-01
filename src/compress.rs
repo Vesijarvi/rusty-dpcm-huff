@@ -52,6 +52,16 @@ pub mod huffman {
 
         freq_vec
     }
+    fn entropy_calc(freq_vec: &Vec<Node>)->f64 {
+        let num_color = freq_vec.len();
+        let mut entropy: f64 = 0.0;
+
+        for node in freq_vec {
+            let p = node.freq as f64 / num_color as f64;
+            entropy += (-1_f64)*p*p.log2();
+        }
+        entropy
+    }
     fn construct_huffman_tree(freq: Vec<Node>)->Node{
         let mut pq = BinaryHeap::new();
         for node in freq {
@@ -118,6 +128,7 @@ pub mod huffman {
     fn embed_tree(huffman_node:&Node)->Vec<u8>{
         let mut compressed_data = to_vec(huffman_node);
         compressed_data.insert(0, compressed_data.len() as u8);
+        println!("Header byte: {}", compressed_data.len() as u8);
         compressed_data
     }
     // map input color into corresponding codewords
@@ -127,8 +138,6 @@ pub mod huffman {
         let (mut byte, mut count) = (0,0);
 
         let huffman_map = to_hashmap(huffman_node);
-        // println!{"hashmap:"}
-        // println!("{:?}", huffman_map);
 
         for c in byte_stream {
             let encoding = huffman_map.get(c).unwrap();
@@ -155,11 +164,17 @@ pub mod huffman {
 
 
     pub fn compress(stream_vec: &Vec<u8>)->Vec<u8>{
-        let frequency = freq_count(stream_vec);
+        let frequency = freq_count(&stream_vec);
+        let entropy = entropy_calc(&frequency);
+        println!("-----------------------------");
+        println!("Entropy: {} bit", entropy);
+        println!("-----------------------------");
+        println!("Input byte: {}",&stream_vec.len());
         let huffman_tree = construct_huffman_tree(frequency);
         let mut compressed_data = Vec::from(embed_tree(&huffman_tree));
         compressed_data.extend(compress_data(stream_vec,&huffman_tree));
 
+        println!("Total Output Byte: {}", compressed_data.len());
         compressed_data
     }
 }
