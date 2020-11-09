@@ -1,4 +1,5 @@
-# rusty-classic-huffman-for-img
+# rusty-dpcm-huff
+
   
 ## About 
 
@@ -36,9 +37,9 @@ Baboon
 
 | Image(256*256)  | Entropy(bit) | Before(byte) | After(byte) -without header | Header(byte) | Compression Rate |
 |-----------------|--------------|--------------|-----------------------------|--------------|------------------|
-| baboon_b        | 0000000      | 65536        | 8197                        | 4            | 87.49%           |
-| baboon_halftone | 0000000      | 65535        | 8197                        | 4            | 87.49%           |
-| baboon_raw      | 0000000      | 65536        | 59939                       | 146          | 8.54%            |
+| baboon_b        | 0.78913      | 65536        | 11451                       | 6            | 82.52%           |
+| baboon_halftone | 1.55381      | 65535        | 11352                       | 6            | 82.26%           |
+| baboon_raw      | 6.36163      | 65536        | xxxxx                       | 208          | xxxxx%           |
 
 Lena 
   
