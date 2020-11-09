@@ -175,7 +175,6 @@ pub mod huffman {
 
     pub fn compress(stream_vec: &Vec<u8>)->Vec<u8>{
         let dpcm_data = dpcm_trasform(&stream_vec);
-        println!("{:?}",dpcm_data);
 
         let frequency = freq_count(&dpcm_data);
         let input_byte = &stream_vec.len();
