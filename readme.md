@@ -3,7 +3,7 @@
   
 ## About 
 
-The code is for experimenting classic huffman compression with some raw data images.  
+The code is for experimenting DPCM huffman compression with some raw data images.  
 (ie. Baboon and lena in raw,halftone and binary color)
 
 ## Usage
