@@ -37,9 +37,9 @@ Baboon
 
 | Image(256*256)  | Entropy(bit) | Before(byte) | After(byte) -without header | Header(byte) | Compression Rate |
 |-----------------|--------------|--------------|-----------------------------|--------------|------------------|
-| baboon_b        | 0.78913      | 65536        | 11451                       | 6            | 82.52%           |
-| baboon_halftone | 1.55381      | 65535        | 11352                       | 6            | 82.26%           |
-| baboon_raw      | 6.36163      | 65536        | xxxxx                       | 208          | xxxxx%           |
+| baboon_b        | 0.78913      | 65536        | 9498                        | 6            | 85.51%           |
+| baboon_halftone | 1.55381      | 65536        | 12842                       | 6            | 80.40%           |
+| baboon_raw      | 6.36163      | 65536        | 52788                       | 208          | 19.45%           |
 
 Lena 
   
