@@ -1,5 +1,5 @@
 [package]
-name = "rusty-huff-img"
+name = "rusty-huff-dpcm"
 version = "0.1.0"
 authors = ["yppan"]
 edition = "2018"
