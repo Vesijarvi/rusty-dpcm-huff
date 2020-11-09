@@ -32,6 +32,18 @@ pub mod huffman {
             }
         }
     }
+    // the first data strart with 128
+    fn dpcm_trasform(stream_vec: &Vec<u8>)->Vec<u8>{
+        let mut dpcm_vec = Vec::new();
+        let mut prev: u8 = 0;
+
+        for c in stream_vec {
+            let diff:u16 = ((*c as u16 + 256)-(prev as u16))%256;
+            prev = *c;
+            dpcm_vec.push(diff as u8);
+        }
+    dpcm_vec
+    }
     fn freq_count(stream_vec: &Vec<u8>)->Vec<Node> {
         let mut freq_vec = Vec::new();
         let mut color_cnt: Vec<u8> = stream_vec.to_vec();
@@ -162,9 +174,11 @@ pub mod huffman {
 
 
     pub fn compress(stream_vec: &Vec<u8>)->Vec<u8>{
-        let frequency = freq_count(&stream_vec);
-        let input_byte = &stream_vec.len();
+        let dpcm_data = dpcm_trasform(&stream_vec);
+        println!("{:?}",dpcm_data);
 
+        let frequency = freq_count(&dpcm_data);
+        let input_byte = &stream_vec.len();
         let entropy = entropy_calc(&frequency, input_byte);
         println!("---------------------------------");
         println!("Entropy: {:.05} bit = {:.05} byte", entropy, entropy/8_f64);
@@ -172,7 +186,7 @@ pub mod huffman {
         println!("Input byte: {}",input_byte);
         let huffman_tree = construct_huffman_tree(frequency);
         let mut compressed_data = Vec::from(embed_tree(&huffman_tree));
-        compressed_data.extend(compress_data(stream_vec,&huffman_tree));
+        compressed_data.extend(compress_data(&dpcm_data,&huffman_tree));
 
         println!("Total Output Byte: {}", compressed_data.len());
         compressed_data
